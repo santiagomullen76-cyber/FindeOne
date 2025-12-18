@@ -16,6 +16,7 @@ import {
   Star,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { FindOneLogo } from "@/components/findone-logo"
 import { useActivities } from "@/lib/activities-context"
 import { useUser } from "@/lib/user-context"
@@ -40,6 +41,7 @@ const categories = [
       "Roller",
       "Natación",
       "Voley",
+      "Otros",
     ],
   },
   {
@@ -87,6 +89,10 @@ export function CreateScreen({ onComplete }: CreateScreenProps) {
   const [isPublishing, setIsPublishing] = useState(false)
   const [skillLevel, setSkillLevel] = useState<number | null>(null)
 
+  const [ageMin, setAgeMin] = useState(18)
+  const [ageMax, setAgeMax] = useState(99)
+
+
   const currentCategory = categories.find((c) => c.id === selectedCategory)
   const subcategories = currentCategory?.subcategories || []
   const isSportsCategory = selectedCategory === "sports"
@@ -110,6 +116,17 @@ export function CreateScreen({ onComplete }: CreateScreenProps) {
   const handlePublish = () => {
     if (!selectedCategory || !selectedSubcategory || !title || !location || !date || !time) return
     if (isSportsCategory && !skillLevel) return
+
+    if (ageMin < 18 || ageMax > 99) {
+    alert("El rango de edad debe ser entre 18 y 99")
+    return
+
+  }
+
+    if (ageMin > ageMax) {
+    alert("La edad mínima no puede ser mayor que la máxima")
+    return
+  }
 
     setIsPublishing(true)
 
@@ -140,6 +157,11 @@ export function CreateScreen({ onComplete }: CreateScreenProps) {
       coordinates: { lat: -34.6037 + (Math.random() - 0.5) * 0.1, lng: -58.3816 + (Math.random() - 0.5) * 0.1 },
       spots: Number.parseInt(spots),
       notes: notes,
+
+      ageRange: {
+        min: ageMin,
+        max: ageMax,
+  },
     })
 
     setTimeout(() => {
@@ -390,7 +412,42 @@ export function CreateScreen({ onComplete }: CreateScreenProps) {
             className="w-full px-4 py-3 bg-secondary rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
           />
         </div>
+         
+        {/* Age Range */}
+<div className="space-y-2">
+  <label className="text-sm font-medium">
+    Rango de edad
+  </label>
 
+  <div className="flex gap-4">
+    <div className="flex-1">
+      <label className="text-xs text-muted-foreground">
+        Edad mínima
+      </label>
+      <Input
+        type="number"
+        min={18}
+        max={99}
+        value={ageMin}
+        onChange={(e) => setAgeMin(Number(e.target.value))}
+      />
+    </div>
+
+    <div className="flex-1">
+      <label className="text-xs text-muted-foreground">
+        Edad máxima
+      </label>
+      <Input
+        type="number"
+        min={18}
+        max={99}
+        value={ageMax}
+        onChange={(e) => setAgeMax(Number(e.target.value))}
+      />
+    </div>
+  </div>
+</div>
+ 
         {/* Publish Button */}
         <Button
           onClick={handlePublish}

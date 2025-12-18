@@ -30,6 +30,12 @@ export interface Activity {
   location: string
   coordinates: { lat: number; lng: number }
   spots: number
+
+  ageRange?: {
+    min: number
+    max: number
+  }
+
   notes?: string
   skillLevel?: number
   createdAt: Date

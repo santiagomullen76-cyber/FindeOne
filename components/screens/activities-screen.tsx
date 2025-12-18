@@ -340,6 +340,14 @@ export function ActivitiesScreen() {
                         <Users className="w-3.5 h-3.5" />
                         {activity.participants.length}/{activity.spots} participantes
                       </span>
+
+                      {activity.ageRange && (
+                       <span className="flex items-center gap-1">
+                         <Users className="w-3.5 h-3.5" />
+                         {activity.ageRange.min}–{activity.ageRange.max} años
+                       </span>
+      )}
+
                     </div>
 
                     {/* Show approved participants */}
